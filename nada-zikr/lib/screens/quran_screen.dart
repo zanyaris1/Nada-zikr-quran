@@ -173,11 +173,13 @@ class _QuranScreenState extends State<QuranScreen> {
           children: [
             IconButton(
               onPressed: () => _showSavedAyahsSheet(context, isRtl, language),
-              tooltip: language == 'ku'
-                  ? 'ئایەتە پاشەکەوتکراوەکان ($count)'
-                  : language == 'ar'
-                      ? 'الآيات المحفوظة ($count)'
-                      : 'Saved Ayahs ($count)',
+              tooltip: language == 'kmr'
+                  ? 'ئایەتێن پاراستی ($count)'
+                  : (language == 'ku'
+                      ? 'ئایەتە پاشەکەوتکراوەکان ($count)'
+                      : (language == 'ar'
+                          ? 'الآيات المحفوظة ($count)'
+                          : 'Saved Ayahs ($count)')),
               icon: Icon(
                 count > 0 ? Icons.bookmarks_rounded : Icons.bookmarks_outlined,
                 color: AppColors.gold,
@@ -246,22 +248,28 @@ class _QuranScreenState extends State<QuranScreen> {
                     IconButton(
                       onPressed: () => DownloadedSurahsSheet.show(context),
                       tooltip: activeCount > 0
-                          ? (language == 'ku'
-                              ? 'سوورەتە داگیراوەکانی ${activeReciter.nameKu} ($activeCount)'
-                              : language == 'ar'
-                                  ? 'السور المحملة للشيخ ${activeReciter.nameAr} ($activeCount)'
-                                  : 'Downloaded Surahs - ${activeReciter.nameEn} ($activeCount)')
-                          : (totalCount > 0
-                              ? (language == 'ku'
-                                  ? 'سوورەتە داگیراوەکان ($totalCount داگیراو)'
-                                  : language == 'ar'
-                                      ? 'السور المحملة ($totalCount سورة)'
-                                      : 'Downloaded Surahs ($totalCount total)')
+                          ? (language == 'kmr'
+                              ? 'سوورەتێن داگرتی یێن ${activeReciter.localizedName(language)} ($activeCount)'
                               : (language == 'ku'
-                                  ? 'سوورەتە داگیراوەکان (0)'
-                                  : language == 'ar'
-                                      ? 'السور المحملة (0)'
-                                      : 'Downloaded Surahs (0)')),
+                                  ? 'سوورەتە داگیراوەکانی ${activeReciter.nameKu} ($activeCount)'
+                                  : (language == 'ar'
+                                      ? 'السور المحملة للشيخ ${activeReciter.nameAr} ($activeCount)'
+                                      : 'Downloaded Surahs - ${activeReciter.nameEn} ($activeCount)')))
+                          : (totalCount > 0
+                              ? (language == 'kmr'
+                                  ? 'سوورەتێن داگرتی ($totalCount داگرتی)'
+                                  : (language == 'ku'
+                                      ? 'سوورەتە داگیراوەکان ($totalCount داگیراو)'
+                                      : (language == 'ar'
+                                          ? 'السور المحملة ($totalCount سورة)'
+                                          : 'Downloaded Surahs ($totalCount total)')))
+                              : (language == 'kmr'
+                                  ? 'سوورەتێن داگرتی (0)'
+                                  : (language == 'ku'
+                                      ? 'سوورەتە داگیراوەکان (0)'
+                                      : (language == 'ar'
+                                          ? 'السور المحملة (0)'
+                                          : 'Downloaded Surahs (0)')))),
                       icon: Icon(
                         hasDownloads
                             ? Icons.offline_pin_rounded
@@ -373,22 +381,26 @@ class _QuranScreenState extends State<QuranScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              language == 'ku'
-                                  ? 'ئایەتە پاشەکەوتکراوەکان'
-                                  : language == 'ar'
-                                      ? 'الآيات المحفوظة'
-                                      : 'Saved Ayahs',
+                              language == 'kmr'
+                                  ? 'ئایەتێن پاراستی'
+                                  : (language == 'ku'
+                                      ? 'ئایەتە پاشەکەوتکراوەکان'
+                                      : (language == 'ar'
+                                          ? 'الآيات المحفوظة'
+                                          : 'Saved Ayahs')),
                               style: isRtl
                                   ? AppTheme.kurdishTitle(fontSize: 18, color: AppColors.cream)
                                   : AppTheme.englishText(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              language == 'ku'
-                                  ? 'هەموو ئەو ئایەتانەی پاشەکەوتت کردوون'
-                                  : language == 'ar'
-                                      ? 'جميع الآيات التي قمت بحفظها للرجوع إليها'
-                                      : 'All your bookmarked ayahs for quick access',
+                              language == 'kmr'
+                                  ? 'هەمی ئەو ئایەتێن تە پاراستین بۆ زڤڕینێ'
+                                  : (language == 'ku'
+                                      ? 'هەموو ئەو ئایەتانەی پاشەکەوتت کردوون'
+                                      : (language == 'ar'
+                                          ? 'جميع الآيات التي قمت بحفظها للرجوع إليها'
+                                          : 'All your bookmarked ayahs for quick access')),
                               style: AppTheme.englishText(fontSize: 11, color: AppColors.mutedText),
                             ),
                           ],
@@ -420,22 +432,26 @@ class _QuranScreenState extends State<QuranScreen> {
                                 Icon(Icons.bookmark_border_rounded, size: 48, color: AppColors.faintText),
                                 const SizedBox(height: 12),
                                 Text(
-                                  language == 'ku'
-                                      ? 'هیچ ئایەتێک پاشەکەوت نەکراوە'
-                                      : language == 'ar'
-                                          ? 'لا توجد آيات محفوظة بعد'
-                                          : 'No saved ayahs yet',
+                                  language == 'kmr'
+                                      ? 'چ ئایەت نەهاتینە پاراستن'
+                                      : (language == 'ku'
+                                          ? 'هیچ ئایەتێک پاشەکەوت نەکراوە'
+                                          : (language == 'ar'
+                                              ? 'لا توجد آيات محفوظة بعد'
+                                              : 'No saved ayahs yet')),
                                   style: isRtl
                                       ? AppTheme.kurdishText(fontSize: 14, color: AppColors.cream)
                                       : AppTheme.englishText(fontSize: 14, color: AppColors.cream),
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
-                                  language == 'ku'
-                                      ? 'لە کاتی خوێندنەوەدا بە ئایکۆنی بووکمارک ئایەت پاشەکەوت بکە'
-                                      : language == 'ar'
-                                          ? 'يمكنك حفظ أي آية أثناء القراءة بالضغط على علامة الحفظ'
-                                          : 'Bookmark any ayah while reading to see it here',
+                                  language == 'kmr'
+                                      ? 'ل دەمێ خاندنێ ب ڕێکا نیشانێ ئایەتێ بپارێزە'
+                                      : (language == 'ku'
+                                          ? 'لە کاتی خوێندنەوەدا بە ئایکۆنی بووکمارک ئایەت پاشەکەوت بکە'
+                                          : (language == 'ar'
+                                              ? 'يمكنك حفظ أي آية أثناء القراءة بالضغط على علامة الحفظ'
+                                              : 'Bookmark any ayah while reading to see it here')),
                                   style: AppTheme.englishText(fontSize: 11, color: AppColors.mutedText),
                                   textAlign: TextAlign.center,
                                 ),
@@ -451,7 +467,7 @@ class _QuranScreenState extends State<QuranScreen> {
                             final bookmark = bookmarks[index];
                             final surahNumber = bookmark['surahNumber'] as int? ?? 1;
                             final ayahNumber = bookmark['ayahNumber'] as int? ?? 1;
-                            final name = language == 'ku'
+                            final name = (language == 'ku' || language == 'kmr')
                                 ? bookmark['surahNameKu']
                                 : language == 'ar'
                                     ? bookmark['surahNameAr']
@@ -502,7 +518,7 @@ class _QuranScreenState extends State<QuranScreen> {
                                   ),
                                 ),
                                 title: Text(
-                                    language == 'ku'
+                                    (language == 'ku' || language == 'kmr')
                                       ? 'ئایەت $ayahNumber، $name'
                                       : language == 'ar'
                                         ? 'الآية $ayahNumber، $name'
@@ -528,11 +544,13 @@ class _QuranScreenState extends State<QuranScreen> {
                                   children: [
                                     IconButton(
                                       icon: Icon(Icons.bookmark_remove_rounded, color: AppColors.faintText, size: 20),
-                                        tooltip: language == 'ku'
-                                          ? 'سڕینەوە'
-                                          : language == 'ar'
-                                            ? 'حذف الإشارة المرجعية'
-                                            : 'Delete bookmark',
+                                        tooltip: language == 'kmr'
+                                          ? 'ژێبرنا نیشانێ'
+                                          : (language == 'ku'
+                                              ? 'سڕینەوە'
+                                              : (language == 'ar'
+                                                  ? 'حذف الإشارة المرجعية'
+                                                  : 'Delete bookmark')),
                                       onPressed: () async {
                                         await StorageService.removeQuranAyahBookmark(
                                           surahNumber: surahNumber,
@@ -1489,10 +1507,13 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
   void _showAyahActionMenu(QuranAyah ayah) {
     final loc = AppLocalizations.of(context);
     final lang = loc?.locale.languageCode ?? 'ku';
-    String localized(String kurdish, String arabic, String english) {
-      return lang == 'ku' ? kurdish : lang == 'ar' ? arabic : english;
+    String localized(String kurdish, String arabic, String english, [String? kurmanji]) {
+      if (lang == 'kmr') return kurmanji ?? kurdish;
+      if (lang == 'ku') return kurdish;
+      if (lang == 'ar') return arabic;
+      return english;
     }
-    final isRtl = lang == 'ku' || lang == 'ar';
+    final isRtl = lang == 'ku' || lang == 'kmr' || lang == 'ar';
 
     showModalBottomSheet(
       context: context,
@@ -1558,6 +1579,7 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
                         'ئایەت ${ayah.ayah} · لاپەڕە ${ayah.page} · جوزء ${ayah.juz}',
                         'الآية ${ayah.ayah} · صفحة ${ayah.page} · الجزء ${ayah.juz}',
                         'Ayah ${ayah.ayah} · Page ${ayah.page} · Juz ${ayah.juz}',
+                        'ئایەت ${ayah.ayah} · بەرپەر ${ayah.page} · جزء ${ayah.juz}',
                       ),
                       style: AppTheme.englishText(
                           fontSize: 12, color: AppColors.faintText),
@@ -1572,9 +1594,9 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
                     iconColor: AppColors.gold,
                     label: _bookmarkedAyahs.contains('${ayah.surah}:${ayah.ayah}')
                         ? localized('لابردنی پاشەکەوت', 'إلغاء حفظ هذه الآية',
-                          'Unsave This Ayah')
+                          'Unsave This Ayah', 'ڕاکرنا پاراستنێ')
                         : localized('پاشەکەوتکردنی ئەم ئایەتە', 'حفظ هذه الآية',
-                          'Save This Ayah'),
+                          'Save This Ayah', 'پاراستنا ڤێ ئایەتێ'),
                     labelStyle: isRtl
                         ? AppTheme.kurdishText(
                             fontSize: 14,
@@ -1596,9 +1618,9 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
                         SnackBar(
                           content: Text(wasSaved
                                 ? localized('پاشەکەوتەکە لابرا', 'تم إلغاء حفظ الآية',
-                                  'Ayah unsaved')
+                                  'Ayah unsaved', 'پاراستن هاتە ڕاکرن')
                                 : localized('ئایەتەکە پاشەکەوت کرا', 'تم حفظ الآية',
-                                  'Ayah saved')),
+                                  'Ayah saved', 'ئایەت هاتە پاراستن')),
                           backgroundColor: AppColors.softSurface,
                           duration: const Duration(seconds: 2),
                         ),
@@ -1610,9 +1632,11 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
                   _AyahActionButton(
                     icon: Icons.play_arrow_rounded,
                     iconColor: AppColors.gold,
-                    label: lang == 'ku'
-                        ? 'گوێگرتن'
-                        : (lang == 'ar' ? 'تشغيل' : 'Play'),
+                    label: lang == 'kmr'
+                        ? 'گوهداری'
+                        : (lang == 'ku'
+                            ? 'گوێگرتن'
+                            : (lang == 'ar' ? 'تشغيل' : 'Play')),
                     labelStyle: isRtl
                         ? AppTheme.kurdishText(
                             fontSize: 14,
@@ -1636,7 +1660,7 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
                     icon: Icons.auto_stories_rounded,
                     iconColor: AppColors.accent1,
                     label: localized(
-                      'تەفسیری ئەم ئایەتە', 'تفسير هذه الآية', 'Open Tafsir'),
+                      'تەفسیری ئەم ئایەتە', 'تفسير هذه الآية', 'Open Tafsir', 'تەفسیرا ڤێ ئایەتێ'),
                     labelStyle: isRtl
                         ? AppTheme.kurdishText(
                             fontSize: 14,
@@ -1657,7 +1681,7 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
                     icon: Icons.copy_rounded,
                     iconColor: AppColors.accent3,
                     label: localized(
-                      'کۆپیکردنی ئایەتەکە', 'نسخ نص الآية', 'Copy Ayah Text'),
+                      'کۆپیکردنی ئایەتەکە', 'نسخ نص الآية', 'Copy Ayah Text', 'کۆپیکرنا دەقێ ئایەتێ'),
                     labelStyle: isRtl
                         ? AppTheme.kurdishText(
                             fontSize: 14,
@@ -1674,7 +1698,7 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
                         SnackBar(
                             content: Text(
                               localized('ئایەتەکە کۆپی کرا', 'تم نسخ الآية',
-                                'Ayah copied')),
+                                'Ayah copied', 'ئایەت هاتە کۆپیکرن')),
                           backgroundColor: AppColors.softSurface,
                           duration: const Duration(seconds: 1),
                         ),
@@ -1687,7 +1711,7 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
                     icon: Icons.share_rounded,
                     iconColor: AppColors.gold,
                     label: localized(
-                      'بڵاوکردنەوەی ئەم ئایەتە', 'مشاركة هذه الآية', 'Share This Ayah'),
+                      'بڵاوکردنەوەی ئەم ئایەتە', 'مشاركة هذه الآية', 'Share This Ayah', 'پارڤەکرنا ڤێ ئایەتێ'),
                     labelStyle: isRtl
                         ? AppTheme.kurdishText(
                             fontSize: 14,
@@ -1703,14 +1727,14 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
                       buffer.writeln('﴿ ${ayah.text} ﴾');
                       buffer.writeln();
                       final surahMeta = _getSurahMeta(ayah.surah) ?? widget.surah;
-                      final surahName = lang == 'ku'
+                      final surahName = (lang == 'ku' || lang == 'kmr')
                           ? surahMeta.kurdishName
                           : lang == 'ar'
                               ? surahMeta.arabicName
                               : surahMeta.englishName;
                       buffer.writeln(
-                        '$surahName - ${localized('ئایەت', 'الآية', 'Ayah')} ${ayah.ayah}');
-                      buffer.writeln(localized('نەدا', 'ندا', 'Nada Quran'));
+                        '$surahName - ${localized('ئایەت', 'الآية', 'Ayah', 'ئایەت')} ${ayah.ayah}');
+                      buffer.writeln(localized('نەدا', 'ندا', 'Nada Quran', 'نەدا'));
                       AppShareService.share(context, buffer.toString());
                     },
                   ),
@@ -1730,7 +1754,7 @@ class _SurahReadingScreenState extends State<SurahReadingScreen> {
     final loc = AppLocalizations.of(context);
     final lang = loc?.locale.languageCode ?? 'ku';
     final surahMeta = _getSurahMeta(ayah.surah) ?? widget.surah;
-    final surahName = lang == 'ku'
+    final surahName = (lang == 'ku' || lang == 'kmr')
         ? surahMeta.kurdishName
         : lang == 'ar'
             ? surahMeta.arabicName
@@ -3199,39 +3223,47 @@ class _BookmarkNoteDialogState extends State<_BookmarkNoteDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       scrollable: true,
-        title: Text(widget.language == 'ku'
-          ? 'پاشەکەوتکردنی ئایەت'
-          : widget.language == 'ar'
-            ? 'حفظ الآية'
-            : 'Save Ayah'),
+      title: Text(widget.language == 'kmr'
+          ? 'پاراستنا ئایەتێ'
+          : widget.language == 'ku'
+              ? 'پاشەکەوتکردنی ئایەت'
+              : widget.language == 'ar'
+                  ? 'حفظ الآية'
+                  : 'Save Ayah'),
       content: TextField(
         controller: _controller,
         autofocus: true,
         maxLines: 3,
         decoration: InputDecoration(
-          hintText: widget.language == 'ku'
-              ? 'تێبینی زیاد بکە (ئارەزوومەندانەیە)'
-              : widget.language == 'ar'
-                  ? 'أضف ملاحظة (اختياري)'
-                  : 'Add a note (optional)',
+          hintText: widget.language == 'kmr'
+              ? 'تێبینییەکێ زێدە بکە (ب دلێ خۆیە)'
+              : widget.language == 'ku'
+                  ? 'تێبینی زیاد بکە (ئارەزوومەندانەیە)'
+                  : widget.language == 'ar'
+                      ? 'أضف ملاحظة (اختياري)'
+                      : 'Add a note (optional)',
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-            child: Text(widget.language == 'ku'
-              ? 'پاشگەزبوونەوە'
-              : widget.language == 'ar'
-                ? 'إلغاء'
-                : 'Cancel'),
+          child: Text(widget.language == 'kmr'
+              ? 'پاشگەزبوون'
+              : widget.language == 'ku'
+                  ? 'پاشگەزبوونەوە'
+                  : widget.language == 'ar'
+                      ? 'إلغاء'
+                      : 'Cancel'),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(_controller.text),
-            child: Text(widget.language == 'ku'
-              ? 'پاشەکەوتکردن'
-              : widget.language == 'ar'
-                ? 'حفظ'
-                : 'Save'),
+          child: Text(widget.language == 'kmr'
+              ? 'پاراستن'
+              : widget.language == 'ku'
+                  ? 'پاشەکەوتکردن'
+                  : widget.language == 'ar'
+                      ? 'حفظ'
+                      : 'Save'),
         ),
       ],
     );
