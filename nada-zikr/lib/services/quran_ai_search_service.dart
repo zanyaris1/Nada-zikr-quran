@@ -132,7 +132,7 @@ class QuranAiSearchService {
 
   Future<Map<String, dynamic>> _callGeminiApi(String query, String apiKey) async {
     final urlWithKey = Uri.parse(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$apiKey',
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=$apiKey',
     );
 
     const systemPrompt = '''
@@ -142,8 +142,8 @@ Analyze user natural language search queries in Kurdish, Arabic, or English and 
 CRITICAL INSTRUCTIONS:
 - Return ONLY valid JSON (no markdown code blocks, no ```json).
 - Validate exact Surah number (1 to 114) and Ayah number.
-- Provide concise 1-sentence explanations in reason_ku (Sorani Kurdish), reason_ar (Arabic), and reason_en (English) describing why this Ayah is the exact match.
-- Return between 1 to 5 of the most accurate Ayahs.
+- Provide concise 1-sentence explanations in reason_ku (Sorani Kurdish), reason_ar (Arabic), and reason_en (English) describing why this Ayah matches.
+- Return ALL relevant Ayahs matching the user's intent or requested quantity (whether it is 1 single specific Ayah, several Ayahs, or all major Ayahs related to the topic, up to 15 Ayahs).
 
 JSON OUTPUT FORMAT:
 {
@@ -183,12 +183,12 @@ JSON OUTPUT FORMAT:
       urlWithKey,
       headers: headers,
       body: json.encode(requestBody),
-    ).timeout(const Duration(seconds: 12));
+    ).timeout(const Duration(seconds: 15));
 
     // If query param auth rejected, try with Bearer token
     if (res.statusCode == 401 || res.statusCode == 403 || res.statusCode == 400) {
       final rawUrl = Uri.parse(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent',
       );
       final bearerHeaders = {
         'Content-Type': 'application/json',
@@ -198,7 +198,7 @@ JSON OUTPUT FORMAT:
         rawUrl,
         headers: bearerHeaders,
         body: json.encode(requestBody),
-      ).timeout(const Duration(seconds: 12));
+      ).timeout(const Duration(seconds: 15));
       if (retryRes.statusCode == 200) {
         res = retryRes;
       }
