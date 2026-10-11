@@ -20,6 +20,7 @@ class ZikrTextItem {
       case 'ar':
         return titleAr;
       case 'ku':
+      case 'kmr':
         return titleKu;
       default:
         return titleEn;

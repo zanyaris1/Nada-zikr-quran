@@ -196,7 +196,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final isDark = palette.isDark;
     final onSurface = isDark ? AppColors.cream : AppColors.darkBg;
     final lang = AppLocalizations.languageCode;
-    final isRtl = lang == 'ku' || lang == 'ar';
+    final isRtl = lang == 'ku' || lang == 'ar' || lang == 'kmr';
 
     return MaterialApp(
         title: 'نەدا: قورئان و یادی خوا',
@@ -207,6 +207,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         locale: Locale(lang),
         supportedLocales: const [
           Locale('ku'),
+          Locale('kmr'),
           Locale('en'),
           Locale('ar'),
         ],
@@ -290,11 +291,13 @@ class _MaterialLocalizationsDelegate extends LocalizationsDelegate<MaterialLocal
   const _MaterialLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['ku', 'en', 'ar'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => ['ku', 'kmr', 'en', 'ar'].contains(locale.languageCode);
 
   @override
   Future<MaterialLocalizations> load(Locale locale) {
-    final frameworkLocale = locale.languageCode == 'ku' ? const Locale('en') : locale;
+    final frameworkLocale = (locale.languageCode == 'ku' || locale.languageCode == 'kmr')
+        ? const Locale('en')
+        : locale;
     return GlobalMaterialLocalizations.delegate.load(frameworkLocale);
   }
 
@@ -306,12 +309,14 @@ class _WidgetsLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocaliz
   const _WidgetsLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['ku', 'en', 'ar'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => ['ku', 'kmr', 'en', 'ar'].contains(locale.languageCode);
 
   @override
   Future<WidgetsLocalizations> load(Locale locale) {
-    // Map Kurdish to Arabic so Flutter treats it as RTL
-    final frameworkLocale = locale.languageCode == 'ku' ? const Locale('ar') : locale;
+    // Map Kurdish (Sorani & Kurmanji) to Arabic so Flutter treats it as RTL
+    final frameworkLocale = (locale.languageCode == 'ku' || locale.languageCode == 'kmr')
+        ? const Locale('ar')
+        : locale;
     return GlobalWidgetsLocalizations.delegate.load(frameworkLocale);
   }
 
@@ -323,11 +328,13 @@ class _CupertinoLocalizationsDelegate extends LocalizationsDelegate<CupertinoLoc
   const _CupertinoLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['ku', 'en', 'ar'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => ['ku', 'kmr', 'en', 'ar'].contains(locale.languageCode);
 
   @override
   Future<CupertinoLocalizations> load(Locale locale) {
-    final frameworkLocale = locale.languageCode == 'ku' ? const Locale('en') : locale;
+    final frameworkLocale = (locale.languageCode == 'ku' || locale.languageCode == 'kmr')
+        ? const Locale('en')
+        : locale;
     return GlobalCupertinoLocalizations.delegate.load(frameworkLocale);
   }
 

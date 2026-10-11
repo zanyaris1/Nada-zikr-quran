@@ -26,7 +26,7 @@ class LocationResult {
   });
 
   String displayName(String locale) {
-    if (locale == 'ku') return displayNameKu;
+    if (locale == 'ku' || locale == 'kmr') return displayNameKu;
     if (locale == 'ar') return displayNameAr;
     return displayNameEn;
   }

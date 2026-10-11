@@ -69,10 +69,13 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
     setState(() => _isGpsLoading = false);
 
     if (!locRes.isGpsSuccess && mounted) {
+      final isKurmanji = widget.locale == 'kmr';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            locRes.errorMessage ?? 'دەسەڵاتی جوگرافیا (GPS) ڕێگەنەدراوە. شوێن خەمڵێنرا بۆ ${locRes.nearestCity.nameKu}.',
+            locRes.errorMessage ?? (isKurmanji
+                ? 'دەستهەلاتا جوگرافی (GPS) نەهاتیە دان. جهـ هاتە خەملاندن بۆ ${locRes.nearestCity.displayName(widget.locale)}.'
+                : 'دەسەڵاتی جوگرافیا (GPS) ڕێگەنەدراوە. شوێن خەمڵێنرا بۆ ${locRes.nearestCity.displayName(widget.locale)}.'),
             style: AppTheme.kurdishText(color: Colors.white, fontSize: 13),
           ),
           backgroundColor: AppColors.gold,
@@ -101,22 +104,27 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
     if (_searchQuery.isEmpty) return [];
     return WorldCitiesCatalog.allCities.where((city) {
       final ku = city.nameKu.toLowerCase();
+      final kmr = city.nameKmr.toLowerCase();
       final ar = city.nameAr.toLowerCase();
       final en = city.nameEn.toLowerCase();
       final countryKu = city.countryKu.toLowerCase();
+      final countryKmr = city.countryKmr.toLowerCase();
       final countryEn = city.countryEn.toLowerCase();
       return ku.contains(_searchQuery) ||
+          kmr.contains(_searchQuery) ||
           ar.contains(_searchQuery) ||
           en.contains(_searchQuery) ||
           countryKu.contains(_searchQuery) ||
+          countryKmr.contains(_searchQuery) ||
           countryEn.contains(_searchQuery);
     }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isKurdish = widget.locale == 'ku';
-    final isRtl = widget.locale == 'ku' || widget.locale == 'ar';
+    final isKurmanji = widget.locale == 'kmr';
+    final isKurdish = widget.locale == 'ku' || widget.locale == 'kmr';
+    final isRtl = widget.locale == 'ku' || widget.locale == 'kmr' || widget.locale == 'ar';
 
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
@@ -153,7 +161,9 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  isKurdish ? 'شوێن و شار هەڵبژێرە' : 'Select Location & City',
+                  isKurmanji
+                      ? 'جهـ و باژێری هەلبژێڕە'
+                      : (isKurdish ? 'شوێن و شار هەڵبژێرە' : 'Select Location & City'),
                   style: AppTheme.kurdishTitle(fontSize: 20, color: AppColors.gold),
                 ),
                 IconButton(
@@ -172,7 +182,9 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
               textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
               style: AppTheme.englishText(color: AppColors.cream, fontSize: 14),
               decoration: InputDecoration(
-                hintText: isKurdish ? 'گەڕان بۆ شاری دڵخواز...' : 'Search city or country...',
+                hintText: isKurmanji
+                    ? 'ل باژێرێ دلخواز بگەڕە...'
+                    : (isKurdish ? 'گەڕان بۆ شاری دڵخواز...' : 'Search city or country...'),
                 hintStyle: AppTheme.kurdishText(fontSize: 13, color: AppColors.faintText),
                 prefixIcon: Icon(Icons.search_rounded, color: AppColors.gold),
                 suffixIcon: _searchQuery.isNotEmpty
@@ -199,7 +211,7 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
           const Divider(color: Colors.white10, height: 16),
 
           Expanded(
-            child: _searchQuery.isNotEmpty ? _buildSearchResultsList(isKurdish) : _buildHierarchicalList(isKurdish),
+            child: _searchQuery.isNotEmpty ? _buildSearchResultsList(isKurdish, isKurmanji) : _buildHierarchicalList(isKurdish, isKurmanji),
           ),
         ],
       ),
@@ -207,12 +219,14 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
   );
   }
 
-  Widget _buildSearchResultsList(bool isKurdish) {
+  Widget _buildSearchResultsList(bool isKurdish, bool isKurmanji) {
     final results = _filteredCities;
     if (results.isEmpty) {
       return Center(
         child: Text(
-          isKurdish ? 'هیچ شارێک نەدۆزرایەوە.' : 'No city found.',
+          isKurmanji
+              ? 'چ باژێر نەهاتنە دیتن.'
+              : (isKurdish ? 'هیچ شارێک نەدۆزرایەوە.' : 'No city found.'),
           style: AppTheme.kurdishText(fontSize: 14, color: AppColors.faintText),
         ),
       );
@@ -224,12 +238,12 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
       itemBuilder: (context, index) {
         final city = results[index];
         final isSelected = _currentMode == 'preset' && _currentCityId == city.id;
-        return _buildCityTile(city, isSelected, isKurdish);
+        return _buildCityTile(city, isSelected, isKurdish, isKurmanji);
       },
     );
   }
 
-  Widget _buildHierarchicalList(bool isKurdish) {
+  Widget _buildHierarchicalList(bool isKurdish, bool isKurmanji) {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       children: [
@@ -250,7 +264,9 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
               child: Icon(Icons.my_location_rounded, color: AppColors.gold, size: 22),
             ),
             title: Text(
-              isKurdish ? 'دیاریکردنی شوێن بە جی پی ئێس (GPS)' : 'Live GPS Auto Detect',
+              isKurmanji
+                  ? 'دیاریکردنا جهی ب جی پی ئێس (GPS)'
+                  : (isKurdish ? 'دیاریکردنی شوێن بە جی پی ئێس (GPS)' : 'Live GPS Auto Detect'),
               style: AppTheme.kurdishText(
                 fontSize: 14,
                 color: _currentMode == 'gps' ? AppColors.gold : AppColors.cream,
@@ -258,7 +274,9 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
               ),
             ),
             subtitle: Text(
-              isKurdish ? 'کاتی بانگ بەپێی شوێنی وورد و ڕاستەوخۆت حیساب دەکرێت' : 'Exact local coordinates via GPS',
+              isKurmanji
+                  ? 'دەمی بانگی ل دووڤ جهێ تە یێ دروست و ڕاستەوخۆ دهێتە هژمارتن'
+                  : (isKurdish ? 'کاتی بانگ بەپێی شوێنی وورد و ڕاستەوخۆت حیساب دەکرێت' : 'Exact local coordinates via GPS'),
               style: AppTheme.kurdishText(fontSize: 11, color: AppColors.faintText),
             ),
             trailing: _isGpsLoading
@@ -275,18 +293,20 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
         Padding(
           padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
           child: Text(
-            isKurdish ? 'هەڵبژاردنی شار بەپێی وڵات:' : 'Select city by country:',
+            isKurmanji
+                ? 'هەلبژارتنا باژێری ل دووڤ وەلاتان:'
+                : (isKurdish ? 'هەڵبژاردنی شار بەپێی وڵات:' : 'Select city by country:'),
             style: AppTheme.kurdishTitle(fontSize: 14, color: AppColors.gold),
           ),
         ),
 
         // Country Accordions
-        ...WorldCitiesCatalog.countryGroups.map((group) => _buildCountryAccordion(group, isKurdish)),
+        ...WorldCitiesCatalog.countryGroups.map((group) => _buildCountryAccordion(group, isKurdish, isKurmanji)),
       ],
     );
   }
 
-  Widget _buildCountryAccordion(CountryGroup group, bool isKurdish) {
+  Widget _buildCountryAccordion(CountryGroup group, bool isKurdish, bool isKurmanji) {
     final countryName = group.displayName(widget.locale);
 
     return Container(
@@ -313,19 +333,19 @@ class _LocationSelectorSheetState extends State<LocationSelectorSheet> {
             ),
           ),
           subtitle: Text(
-            '${group.cities.length} ${isKurdish ? "شار" : "cities"}',
+            '${group.cities.length} ${isKurmanji ? "باژێر" : (isKurdish ? "شار" : "cities")}',
             style: AppTheme.kurdishText(fontSize: 11, color: AppColors.faintText),
           ),
           children: group.cities.map((city) {
             final isSelected = _currentMode == 'preset' && _currentCityId == city.id;
-            return _buildCityTile(city, isSelected, isKurdish);
+            return _buildCityTile(city, isSelected, isKurdish, isKurmanji);
           }).toList(),
         ),
       ),
     );
   }
 
-  Widget _buildCityTile(WorldCity city, bool isSelected, bool isKurdish) {
+  Widget _buildCityTile(WorldCity city, bool isSelected, bool isKurdish, bool isKurmanji) {
     final isKurdistan = city.countryEn == 'Kurdistan';
 
     return Container(

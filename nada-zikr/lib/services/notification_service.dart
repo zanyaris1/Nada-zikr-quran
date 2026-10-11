@@ -218,7 +218,7 @@ class NotificationService {
         );
         final items = schedule['items'] as List<PrayerTimeItem>;
         final lang = AppLocalizations.languageCode;
-        final locName = (lang == 'ku'
+        final locName = (lang == 'ku' || lang == 'kmr'
                 ? (schedule['locationNameKu'] as String?)
                 : (lang == 'ar'
                     ? (schedule['locationNameAr'] as String?)
@@ -361,6 +361,8 @@ class NotificationService {
   static String localizedPrayerTitle({String? prayerId}) {
     final isSunrise = prayerId == 'sunrise';
     switch (AppLocalizations.languageCode) {
+      case 'kmr':
+        return isSunrise ? 'دەما هەلاتنا ڕۆژێ هات' : 'دەما بانگی هات';
       case 'ku':
         return isSunrise ? 'کاتی هەڵاتنی خۆر هات' : 'کاتی بانگ هات';
       case 'ar':
@@ -379,6 +381,8 @@ class NotificationService {
 
     if (item.id == 'sunrise') {
       switch (AppLocalizations.languageCode) {
+        case 'kmr':
+          return 'دەما هەلاتنا ڕۆژێ بۆ باژێرێ $cleanLocation گەهشت';
         case 'ku':
           return 'کاتی هەڵاتنی خۆر بۆ شاری $cleanLocation گەیشت';
         case 'ar':
@@ -389,6 +393,8 @@ class NotificationService {
     }
 
     switch (AppLocalizations.languageCode) {
+      case 'kmr':
+        return 'دەما بانگێ $prayerName بۆ باژێرێ $cleanLocation گەهشت';
       case 'ku':
         return 'کاتی بانگی $prayerName بۆ شاری $cleanLocation گەیشت';
       case 'ar':
@@ -555,6 +561,8 @@ class NotificationService {
 
   static String localizedPreReminderTitle() {
     switch (AppLocalizations.languageCode) {
+      case 'kmr':
+        return 'ئاگەهداری پێش بانگی';
       case 'ku':
         return 'ئاگاداری پێش بانگ';
       case 'ar':
@@ -575,6 +583,8 @@ class NotificationService {
         .trim();
 
     switch (AppLocalizations.languageCode) {
+      case 'kmr':
+        return '$minutes خولەک ماینە بۆ بانگێ $prayerName ($cleanLocation)';
       case 'ku':
         return '$minutes خولەک ماوە بۆ بانگی $prayerName ($cleanLocation)';
       case 'ar':
@@ -705,6 +715,8 @@ class NotificationService {
 
   static String localizedReminderTitle() {
     switch (AppLocalizations.languageCode) {
+      case 'kmr':
+        return 'ئاگەهداریا زکری';
       case 'ku':
         return 'ئاگادارکردنەوەی زیکر';
       case 'ar':
@@ -716,8 +728,10 @@ class NotificationService {
 
   static String localizedReminderBody() {
     switch (AppLocalizations.languageCode) {
+      case 'kmr':
+        return 'دەست لێبدە بۆ خاندنا زکران';
       case 'ku':
-        return 'کاتێک بۆ بیرکردنەوەی نامەوە';
+        return 'کاتێک بۆ بیرکردنەوەی خودا';
       case 'ar':
         return 'خذ لحظة للذكر والتأمل';
       default:
@@ -849,11 +863,14 @@ class NotificationService {
     );
 
     final title = localizedPrayerTitle();
-    final body = AppLocalizations.languageCode == 'ku'
-        ? 'ئەمە تاقیکردنەوەی دەنگی بانگ و ئاگادارکردنەوەیە'
-        : (AppLocalizations.languageCode == 'ar'
-            ? 'هذا إشعار تجريبي لأذان الصلاة والصوت'
-            : 'This is a test notification for prayer azan and sound');
+    final lang = AppLocalizations.languageCode;
+    final body = lang == 'kmr'
+        ? 'ئەڤە تاقیکرنا دەنگێ بانگی و ئاگەهداریێ یە'
+        : (lang == 'ku'
+            ? 'ئەمە تاقیکردنەوەی دەنگی بانگ و ئاگادارکردنەوەیە'
+            : (lang == 'ar'
+                ? 'هذا إشعار تجريبي لأذان الصلاة والصوت'
+                : 'This is a test notification for prayer azan and sound'));
 
     await _plugin.show(
       id: 999999,

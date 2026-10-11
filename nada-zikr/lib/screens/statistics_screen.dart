@@ -67,46 +67,57 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  String _tr(String lang, {required String ku, required String ar, required String en}) {
+  String _tr(String lang, {required String ku, required String ar, required String en, String? kmr}) {
+    if (lang == 'kmr') return kmr ?? ku;
     if (lang == 'ku') return ku;
     if (lang == 'ar') return ar;
     return en;
   }
 
   void _shareSpiritualProgress(_DetailedStats data, String lang) {
-    final isKurdish = lang == 'ku';
+    final isKurmanji = lang == 'kmr';
+    final isKurdish = lang == 'ku' || isKurmanji;
     final isArabic = lang == 'ar';
     final rank = _getSpiritualRank(data.totalDhikrCount, data.appStats.totalSessions, lang);
     final userName = data.profile != null && data.profile!.name.trim().isNotEmpty
         ? '${data.profile!.name} • '
         : '';
 
-    final text = isKurdish
-        ? '📿 ئامارە ڕۆحییەکانم لە بەرنامەی (نەدا - Nada):\n\n'
-            '✨ ناوی شایستە: $userName${rank.title}\n'
+    final text = isKurmanji
+        ? '📿 ئامارێن من یێن ڕۆحی د بەرنامەیێ (نەدا - Nada) دا:\n\n'
+            '✨ ناڤێ شایستە: $userName${rank.title}\n'
             '🎖️ پلە: ${rank.tierBadge}\n'
             '📌 مەرج: ${rank.requirementText}\n'
             '🔥 بەردەوامی: ${data.appStats.currentStreak} ڕۆژ\n'
-            '📿 کۆی یادەکان: ${data.totalDhikrCount} جار\n'
+            '📿 کۆیا زکران: ${data.totalDhikrCount} جار\n'
             '🏆 باشترین تۆمار: ${data.appStats.bestStreak} ڕۆژ\n\n'
-            'یاوەری ڕۆحی بۆ یاد و دوعاکانی ڕۆژانە 🌟'
-        : isArabic
-            ? '📿 إحصائياتي الإيمانية في تطبيق (نَدَى - Nada):\n\n'
-                '✨ اللقب الإيماني: $userName${rank.title}\n'
-                '🎖️ الرتبة: ${rank.tierBadge}\n'
-                '📌 المتطلب: ${rank.requirementText}\n'
-                '🔥 السلسلة الحالية: ${data.appStats.currentStreak} أيام\n'
-                '📿 إجمالي الأذكار: ${data.totalDhikrCount} ذكر\n'
-                '🏆 أفضل مواظبة: ${data.appStats.bestStreak} أيام\n\n'
-                'رفيقك الإيماني للأذكار والدعاء 🌟'
-            : '📿 My Spiritual Progress on Nada App:\n\n'
-                '✨ Spiritual Title: $userName${rank.title}\n'
-                '🎖️ Tier: ${rank.tierBadge}\n'
-                '📌 Requirement: ${rank.requirementText}\n'
-                '🔥 Current Streak: ${data.appStats.currentStreak} Days\n'
-                '📿 Total Dhikrs: ${data.totalDhikrCount}\n'
-                '🏆 Best Streak: ${data.appStats.bestStreak} Days\n\n'
-                'Daily Dhikr & Quran Companion 🌟';
+            'هەڤالێ ڕۆحی بۆ زکر و دوعایێن ڕۆژانە 🌟'
+        : isKurdish
+            ? '📿 ئامارە ڕۆحییەکانم لە بەرنامەی (نەدا - Nada):\n\n'
+                '✨ ناوی شایستە: $userName${rank.title}\n'
+                '🎖️ پلە: ${rank.tierBadge}\n'
+                '📌 مەرج: ${rank.requirementText}\n'
+                '🔥 بەردەوامی: ${data.appStats.currentStreak} ڕۆژ\n'
+                '📿 کۆی یادەکان: ${data.totalDhikrCount} جار\n'
+                '🏆 باشترین تۆمار: ${data.appStats.bestStreak} ڕۆژ\n\n'
+                'یاوەری ڕۆحی بۆ یاد و دوعاکانی ڕۆژانە 🌟'
+            : isArabic
+                ? '📿 إحصائياتي الإيمانية في تطبيق (نَدَى - Nada):\n\n'
+                    '✨ اللقب الإيماني: $userName${rank.title}\n'
+                    '🎖️ الرتبة: ${rank.tierBadge}\n'
+                    '📌 المتطلب: ${rank.requirementText}\n'
+                    '🔥 السلسلة الحالية: ${data.appStats.currentStreak} أيام\n'
+                    '📿 إجمالي الأذكار: ${data.totalDhikrCount} ذكر\n'
+                    '🏆 أفضل مواظبة: ${data.appStats.bestStreak} أيام\n\n'
+                    'رفيقك الإيماني للأذكار والدعاء 🌟'
+                : '📿 My Spiritual Progress on Nada App:\n\n'
+                    '✨ Spiritual Title: $userName${rank.title}\n'
+                    '🎖️ Tier: ${rank.tierBadge}\n'
+                    '📌 Requirement: ${rank.requirementText}\n'
+                    '🔥 Current Streak: ${data.appStats.currentStreak} Days\n'
+                    '📿 Total Dhikrs: ${data.totalDhikrCount}\n'
+                    '🏆 Best Streak: ${data.appStats.bestStreak} Days\n\n'
+                    'Daily Dhikr & Quran Companion 🌟';
 
     AppShareService.share(context, text);
   }
@@ -114,7 +125,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   @override
   Widget build(BuildContext context) {
     final lang = AppLocalizations.languageCode;
-    final isKurdish = lang == 'ku';
+    final isKurdish = lang == 'ku' || lang == 'kmr';
     final isArabic = lang == 'ar';
 
     return Scaffold(
@@ -127,7 +138,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          _tr(lang, ku: 'ئامارە ڕۆحییەکان', ar: 'الإحصائيات الإيمانية', en: 'Statistics'),
+          _tr(lang, ku: 'ئامارە ڕۆحییەکان', kmr: 'ئامارێن ڕۆحی', ar: 'الإحصائيات الإيمانية', en: 'Statistics'),
           style: isKurdish
               ? AppTheme.kurdishTitle(fontSize: 20, color: AppColors.gold)
               : AppTheme.englishTitle(fontSize: 20, color: AppColors.gold),
@@ -3231,23 +3242,25 @@ class _RankDefinition {
   });
 
   String getTitle(String lang) {
-    if (lang == 'ku') return titleKu;
+    if (lang == 'ku' || lang == 'kmr') return titleKu;
     if (lang == 'ar') return titleAr;
     return titleEn;
   }
 
   String getSubtitle(String lang) {
-    if (lang == 'ku') return subtitleKu;
+    if (lang == 'ku' || lang == 'kmr') return subtitleKu;
     if (lang == 'ar') return subtitleAr;
     return subtitleEn;
   }
 
   String getRequirement(String lang) {
     if (level == 1) {
+      if (lang == 'kmr') return 'دەستپێکا گەشتێ (٠ زکر)';
       if (lang == 'ku') return 'سەرەتای گەشت (٠ یاد)';
       if (lang == 'ar') return '0 ذكر (بداية المسير)';
       return '0 dhikrs (Journey start)';
     }
+    if (lang == 'kmr') return '$reqDhikr زکر یان $reqSessions ڕوونشتن';
     if (lang == 'ku') return '$reqDhikr یاد یان $reqSessions دانیشتن';
     if (lang == 'ar') return '$reqDhikr ذكر أو $reqSessions جلسة';
     return '$reqDhikr dhikrs or $reqSessions sessions';

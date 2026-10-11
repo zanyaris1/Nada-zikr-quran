@@ -35,6 +35,24 @@ class Mood {
   }
 
   String getDisplay(String lang) {
+    if (lang == 'kmr') {
+      switch (id) {
+        case 'grateful':
+          return 'سوپاسدار';
+        case 'anxious':
+          return 'نەئارام';
+        case 'hopeful':
+          return 'ب هێڤی';
+        case 'tired':
+          return 'مەندی';
+        case 'joyful':
+          return 'دلخۆش';
+        case 'sad':
+          return 'خەمگین';
+        default:
+          return kurdish;
+      }
+    }
     if (lang == 'ku') return kurdish;
     if (lang == 'en') return english;
     return label;
@@ -90,6 +108,34 @@ class AzkarCategory {
   }
 
   String getTitle(String lang) {
+    if (lang == 'kmr') {
+      switch (id) {
+        case 'morning':
+          return 'زکرێن سپێدێ';
+        case 'evening':
+          return 'زکرێن ئێڤاری';
+        case 'sleep':
+          return 'زکرێن پێش نڤستنێ';
+        case 'wakeup':
+          return 'زکرێن ژ خەو ڕابوونێ';
+        case 'prayer':
+          return 'زکرێن پشتی نڤێژێ';
+        case 'quran':
+          return 'دوعایێن قورئانا پیرۆز';
+        case 'ayat_kursi':
+          return 'ئایەتا کورسی';
+        case 'surah_mulk':
+          return 'سوورەتا مولک';
+        case 'surah_kahf':
+          return 'سوورەتا کەهف';
+        case 'hadith':
+          return 'فەرموودەیێن پێغەمبەری ﷺ';
+        case 'general':
+          return 'دوعایێن گشتی و ڕۆژانە';
+        default:
+          return kurdish;
+      }
+    }
     if (lang == 'ku') return kurdish;
     if (lang == 'en') return english;
     return label;
@@ -121,7 +167,7 @@ class Azkar {
   String get repeatLabel => repeat.toString();
 
   String getTranslation(String lang) {
-    if (lang == 'ku') return kurdishTranslation;
+    if (lang == 'ku' || lang == 'kmr') return kurdishTranslation;
     if (lang == 'ar') return kurdishTranslation;
     return translation.isNotEmpty ? translation : kurdishTranslation;
   }
@@ -155,7 +201,7 @@ class NameOfAllah {
   });
 
   String getMeaning(String lang) {
-    if (lang == 'ku') return kurdish;
+    if (lang == 'ku' || lang == 'kmr') return kurdish;
     if (lang == 'ar') return arabic;
     return english;
   }

@@ -17,6 +17,7 @@ import '../widgets/downloaded_surahs_sheet.dart';
 import '../widgets/quran_audio_player_widget.dart';
 import '../widgets/reciter_selector_sheet.dart';
 import '../widgets/sign_language_text_widget.dart';
+import 'quran_ai_search_screen.dart';
 
 const String _bismillah = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
 
@@ -628,45 +629,147 @@ class _QuranScreenState extends State<QuranScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  decoration: BoxDecoration(
-                    color: AppColors.panelColor,
-                    border: Border.all(color: AppColors.panelBorderColor),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.search, size: 18, color: AppColors.mutedText),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: TextField(
-                          onChanged: (v) => setState(() => _query = v),
-                          style: AppTheme.englishText(
-                              fontSize: 14, color: AppColors.cream),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            isDense: true,
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 12),
-                            hintText: loc?.translate('searchSurah') ??
-                                (language == 'ku'
-                                    ? 'گەڕان بۆ سوورەت...'
-                                    : language == 'ar'
-                                        ? 'بحث عن سورة...'
-                                        : 'Search surah...'),
-                            hintStyle: isRtl
-                                ? AppTheme.kurdishText(
-                                    fontSize: 13, color: AppColors.faintText)
-                                : AppTheme.englishText(
-                                    fontSize: 13, color: AppColors.faintText),
-                          ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
+                        decoration: BoxDecoration(
+                          color: AppColors.panelColor,
+                          border: Border.all(color: AppColors.panelBorderColor),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.search, size: 18, color: AppColors.mutedText),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                onChanged: (v) => setState(() => _query = v),
+                                style: AppTheme.englishText(
+                                    fontSize: 14, color: AppColors.cream),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                  contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 12),
+                                  hintText: loc?.translate('searchSurah') ??
+                                      (language == 'ku'
+                                          ? 'گەڕان بۆ سوورەت...'
+                                          : language == 'ar'
+                                              ? 'بحث عن سورة...'
+                                              : 'Search surah...'),
+                                  hintStyle: isRtl
+                                      ? AppTheme.kurdishText(
+                                          fontSize: 13, color: AppColors.faintText)
+                                      : AppTheme.englishText(
+                                          fontSize: 13, color: AppColors.faintText),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () {
+                        AppHaptics.selectionClick();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => QuranAiSearchScreen(
+                              initialQuery: _query.isNotEmpty ? _query : null,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.gold.withValues(alpha: 0.25),
+                              AppColors.darkPanel,
+                            ],
+                          ),
+                          border: Border.all(color: AppColors.gold.withValues(alpha: 0.45)),
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.gold.withValues(alpha: 0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.auto_awesome, color: AppColors.gold, size: 18),
+                            const SizedBox(width: 6),
+                            Text(
+                              language == 'ku'
+                                  ? 'ژیری دەستکرد'
+                                  : (language == 'ar' ? 'ذكاء اصطناعي' : 'AI'),
+                              style: TextStyle(
+                                color: AppColors.gold,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              if (_query.trim().isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(14),
+                    onTap: () {
+                      AppHaptics.selectionClick();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => QuranAiSearchScreen(
+                            initialQuery: _query.trim(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.gold.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.auto_awesome, color: AppColors.gold, size: 16),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              language == 'ku'
+                                  ? 'گەڕان لە واتای قورئان بە ژیری دەستکرد بۆ "$_query"'
+                                  : (language == 'ar'
+                                      ? 'البحث في المعاني بالذكاء الاصطناعي عن "$_query"'
+                                      : 'Search Quran meanings with AI for "$_query"'),
+                              style: TextStyle(
+                                color: AppColors.gold,
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward_ios_rounded, color: AppColors.gold, size: 12),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               _buildResumeCard(isRtl, language),
               const SizedBox(height: 4),
               Expanded(

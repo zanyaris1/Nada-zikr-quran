@@ -161,14 +161,17 @@ class _PrayerSettingsSheetState extends State<PrayerSettingsSheet>
 
     if (mounted) {
       Navigator.pop(context);
+      final lang = AppLocalizations.languageCode;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.languageCode == 'ku'
-                ? 'ڕێکخستنەکان پاشەکەوت کران و کاتەکان نوێکرانەوە'
-                : (AppLocalizations.languageCode == 'ar'
-                    ? 'تم حفظ الإعدادات وتحديث المواقيت بنجاح'
-                    : 'Prayer settings saved & times updated successfully'),
+            lang == 'kmr'
+                ? 'ڕێکخستن هاتنە پاراستن و دەم هاتنە نویژەنکرن'
+                : (lang == 'ku'
+                    ? 'ڕێکخستنەکان پاشەکەوت کران و کاتەکان نوێکرانەوە'
+                    : (lang == 'ar'
+                        ? 'تم حفظ الإعدادات وتحديث المواقيت بنجاح'
+                        : 'Prayer settings saved & times updated successfully')),
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           backgroundColor: AppColors.darkPanel,
@@ -204,10 +207,12 @@ class _PrayerSettingsSheetState extends State<PrayerSettingsSheet>
   @override
   Widget build(BuildContext context) {
     final language = AppLocalizations.languageCode;
-    final isKurdish = language == 'ku';
+    final isKurmanji = language == 'kmr';
+    final isKurdish = language == 'ku' || language == 'kmr';
     final isArabic = language == 'ar';
 
-    String loc(String ku, String ar, String en) {
+    String loc(String ku, String ar, String en, [String? kmr]) {
+      if (isKurmanji) return kmr ?? ku;
       return isKurdish ? ku : (isArabic ? ar : en);
     }
 
@@ -254,7 +259,7 @@ class _PrayerSettingsSheetState extends State<PrayerSettingsSheet>
                       children: [
                         Text(
                           loc('ڕێکخستنەکانی کاتی بانگ و ئاگادارکردنەوە',
-                              'إعدادات مواقيت الصلاة والأذان', 'Prayer Times & Azan Settings'),
+                              'إعدادات مواقيت الصلاة والأذان', 'Prayer Times & Azan Settings', 'ڕێکخستنێن دەمێن بانگی و گەهاندنێ'),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTheme.kurdishTitle(fontSize: 18, color: AppColors.gold),
@@ -293,19 +298,19 @@ class _PrayerSettingsSheetState extends State<PrayerSettingsSheet>
                 tabs: [
                   Tab(
                     icon: const Icon(Icons.tune_rounded, size: 18),
-                    text: loc('دەستکاری', 'التعديل', 'Offsets'),
+                    text: loc('دەستکاری', 'التعديل', 'Offsets', 'دەستکاری'),
                   ),
                   Tab(
                     icon: const Icon(Icons.auto_awesome_rounded, size: 18),
-                    text: loc('حیسابکاری', 'الحساب', 'Method'),
+                    text: loc('حیسابکاری', 'الحساب', 'Method', 'حسابکرن'),
                   ),
                   Tab(
                     icon: const Icon(Icons.notifications_active_rounded, size: 18),
-                    text: loc('ئاگاداری', 'التنبيه', 'Azan'),
+                    text: loc('ئاگاداری', 'التنبيه', 'Azan', 'گەهاندن'),
                   ),
                   Tab(
                     icon: const Icon(Icons.calendar_month_rounded, size: 18),
-                    text: loc('کۆچی', 'الهجري', 'Hijri'),
+                    text: loc('کۆچی', 'الهجري', 'Hijri', 'کۆچی'),
                   ),
                 ],
               ),
@@ -358,7 +363,7 @@ class _PrayerSettingsSheetState extends State<PrayerSettingsSheet>
                       const SizedBox(width: 8),
                       Text(
                         loc('پاشەکەوتکردن و چالاککردن', 'حفظ وتفعيل التغييرات',
-                            'Save & Apply Settings'),
+                            'Save & Apply Settings', 'پاراستن و چالاککرن'),
                         style: isKurdish
                             ? AppTheme.kurdishTitle(fontSize: 16, color: Colors.black)
                             : AppTheme.englishTitle(fontSize: 16, color: Colors.black),

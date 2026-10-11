@@ -258,7 +258,7 @@ class _NavBarTabButtonState extends State<_NavBarTabButton>
 
   TextStyle _resolveTextStyle(Color color) {
     final fontWeight = widget.isActive ? FontWeight.w700 : FontWeight.w500;
-    if (widget.languageCode == 'ku') {
+    if (widget.languageCode == 'ku' || widget.languageCode == 'kmr') {
       return AppTheme.kurdishText(
         color: color,
         fontSize: 10.5,

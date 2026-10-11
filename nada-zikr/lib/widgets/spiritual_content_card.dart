@@ -94,8 +94,10 @@ class SpiritualContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isKurmanji = lang == 'kmr';
     final isKurdish = lang == 'ku';
     final isArabic = lang == 'ar';
+    final isKurdishAny = isKurmanji || isKurdish;
     final hasKurdish = kurdishMeaning.trim().isNotEmpty;
     final hasEnglish = englishMeaning.trim().isNotEmpty;
     final hasBoth = hasKurdish && hasEnglish;
@@ -160,11 +162,13 @@ class SpiritualContentCard extends StatelessWidget {
                             children: [
                               Text(
                                 isDisplayingEnglish
-                                    ? (isKurdish
-                                        ? 'مانای ئینگلیزی'
-                                        : (isArabic
-                                            ? 'الترجمة بالإنجليزية'
-                                            : 'English Translation'))
+                                    ? (isKurmanji
+                                        ? 'مانایا ئینگلیزی'
+                                        : (isKurdish
+                                            ? 'مانای ئینگلیزی'
+                                            : (isArabic
+                                                ? 'الترجمة بالإنجليزية'
+                                                : 'English Translation')))
                                     : meaningBadgeKurdishLabel,
                                 style: isDisplayingEnglish
                                     ? const TextStyle(
@@ -190,7 +194,7 @@ class SpiritualContentCard extends StatelessWidget {
                                 const SizedBox(width: 2),
                                 Text(
                                   isDisplayingEnglish
-                                      ? (isKurdish ? 'کوردی' : 'Kurdish')
+                                      ? (isKurdishAny ? 'کوردی' : 'Kurdish')
                                       : 'English',
                                   style: TextStyle(
                                     fontSize: 9,

@@ -101,7 +101,8 @@ class PrayerWidgetService {
       );
 
       final lang = AppLocalizations.languageCode;
-      final isKurdish = lang == 'ku';
+      final isKurmanji = lang == 'kmr';
+      final isKurdish = lang == 'ku' || isKurmanji;
       final isArabic = lang == 'ar';
 
       final items = schedule['items'] as List<PrayerTimeItem>? ?? [];
@@ -170,22 +171,28 @@ class PrayerWidgetService {
       if (nextItem != null) {
         final diff = nextItem.time.difference(DateTime.now());
         if (diff.isNegative) {
-          remainingText = isKurdish
-              ? 'کاتی بانگە'
-              : (isArabic ? 'حان وقت الأذان' : 'Prayer Time');
+          remainingText = isKurmanji
+              ? 'دەما بانگیە'
+              : (isKurdish
+                  ? 'کاتی بانگە'
+                  : (isArabic ? 'حان وقت الأذان' : 'Prayer Time'));
         } else {
           final hours = diff.inHours;
           final minutes = diff.inMinutes % 60;
           if (hours > 0) {
-            remainingText = isKurdish
-                ? '$hours کاتژمێر و $minutes خولەک ماوە'
-                : (isArabic
-                    ? 'باقي $hours ساعة و $minutes دقيقة'
-                    : 'in $hours hrs $minutes mins');
+            remainingText = isKurmanji
+                ? '$hours دەمژمێر و $minutes خولەک ماینە'
+                : (isKurdish
+                    ? '$hours کاتژمێر و $minutes خولەک ماوە'
+                    : (isArabic
+                        ? 'باقي $hours ساعة و $minutes دقيقة'
+                        : 'in $hours hrs $minutes mins'));
           } else {
-            remainingText = isKurdish
-                ? '$minutes خولەک ماوە'
-                : (isArabic ? 'باقي $minutes دقيقة' : 'in $minutes mins');
+            remainingText = isKurmanji
+                ? '$minutes خولەک ماینە'
+                : (isKurdish
+                    ? '$minutes خولەک ماوە'
+                    : (isArabic ? 'باقي $minutes دقيقة' : 'in $minutes mins'));
           }
         }
       }

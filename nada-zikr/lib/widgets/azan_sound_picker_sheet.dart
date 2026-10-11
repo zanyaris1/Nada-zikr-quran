@@ -119,7 +119,8 @@ class AzanSoundPickerSheet {
     String? playingId;
     void Function(void Function())? stateUpdater;
     final language = AppLocalizations.languageCode;
-    final isKurdish = language == 'ku';
+    final isKurmanji = language == 'kmr';
+    final isKurdish = language == 'ku' || isKurmanji;
 
     await AzanAudioService.configureAudioSession();
 
@@ -181,7 +182,9 @@ class AzanSoundPickerSheet {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      isKurdish ? 'دەنگی بانگدان و ئاگادارکردنەوە' : 'Azan & Notification Sound',
+                      isKurmanji
+                          ? 'دەنگێ بانگی و ئاگەهداریێ'
+                          : (isKurdish ? 'دەنگی بانگدان و ئاگادارکردنەوە' : 'Azan & Notification Sound'),
                       style: isKurdish
                           ? AppTheme.kurdishTitle(fontSize: 18, color: AppColors.cream)
                           : AppTheme.englishTitle(fontSize: 18, color: AppColors.cream),
@@ -289,7 +292,7 @@ class AzanSoundPickerSheet {
                                 if (hasAudio)
                                   IconButton(
                                     tooltip: playing
-                                        ? (isKurdish ? 'ڕاگرتن' : 'Stop')
+                                        ? (isKurmanji ? 'ڕاوەستاندن' : (isKurdish ? 'ڕاگرتن' : 'Stop'))
                                         : (isKurdish ? 'گوێگرتن' : 'Listen'),
                                     icon: Icon(
                                       playing
@@ -314,9 +317,11 @@ class AzanSoundPickerSheet {
                                         if (context.mounted) {
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text(isKurdish
-                                                  ? 'ناتوانرێت دەنگەکە لێبدرێت'
-                                                  : 'Unable to play this recording.'),
+                                              content: Text(isKurmanji
+                                                  ? 'دەنگ ناهێتە لێدان'
+                                                  : (isKurdish
+                                                      ? 'ناتوانرێت دەنگەکە لێبدرێت'
+                                                      : 'Unable to play this recording.')),
                                             ),
                                           );
                                         }

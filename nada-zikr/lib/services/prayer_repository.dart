@@ -23,8 +23,10 @@ class CountryGroup {
     required this.cities,
   });
 
+  String get nameKmr => nameKu;
+
   String displayName(String locale) {
-    if (locale == 'ku') return nameKu;
+    if (locale == 'ku' || locale == 'kmr') return nameKu;
     if (locale == 'ar') return nameAr;
     return nameEn;
   }
@@ -46,6 +48,9 @@ class WorldCity {
   final String recommendedMethodId;
   final String? datasetKey;
 
+  String get nameKmr => nameKu;
+  String get countryKmr => countryKu;
+
   const WorldCity({
     required this.id,
     required this.nameEn,
@@ -65,13 +70,13 @@ class WorldCity {
   bool get isKurdistanOfficial => countryEn.toLowerCase() == 'kurdistan' && datasetKey != null;
 
   String displayName(String locale) {
-    if (locale == 'ku') return nameKu;
+    if (locale == 'ku' || locale == 'kmr') return nameKu;
     if (locale == 'ar') return nameAr;
     return nameEn;
   }
 
   String displayCountry(String locale) {
-    if (locale == 'ku') return countryKu;
+    if (locale == 'ku' || locale == 'kmr') return countryKu;
     if (locale == 'ar') return countryAr;
     return countryEn;
   }
@@ -424,6 +429,24 @@ class PrayerTimeItem {
   });
 
   String localizedName(String locale) {
+    if (locale == 'kmr') {
+      switch (id) {
+        case 'fajr':
+          return 'بەیانی';
+        case 'sunrise':
+          return 'ڕۆژهەلات';
+        case 'dhuhr':
+          return 'نیڤرۆ';
+        case 'asr':
+          return 'ئێڤاری';
+        case 'maghrib':
+          return 'مەغریب';
+        case 'isha':
+          return 'عەشا';
+        default:
+          return nameKu;
+      }
+    }
     if (locale == 'ku') return nameKu;
     if (locale == 'ar') return nameAr;
     return nameEn;
@@ -456,7 +479,9 @@ class HijriDateInfo {
   });
 
   String formatted(String locale) {
-    final monthStr = locale == 'ku' ? monthNameKu : (locale == 'ar' ? monthNameAr : monthNameEn);
+    final monthStr = (locale == 'ku' || locale == 'kmr')
+        ? monthNameKu
+        : (locale == 'ar' ? monthNameAr : monthNameEn);
     return '$day $monthStr $year AH';
   }
 

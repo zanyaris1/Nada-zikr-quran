@@ -92,6 +92,7 @@ class _FocusedReadingSheetState extends State<FocusedReadingSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final isKurmanji = widget.lang == 'kmr';
     final isKurdish = widget.lang == 'ku';
     final isEnglish = widget.lang == 'en';
     final hasTranslation =
@@ -139,7 +140,7 @@ class _FocusedReadingSheetState extends State<FocusedReadingSheet> {
                   onPressed: () => Navigator.pop(context, _count),
                   icon: const Icon(Icons.close_rounded),
                   color: AppColors.cream,
-                  tooltip: isKurdish ? 'داخستن' : 'Close',
+                  tooltip: isKurmanji ? 'گرتن' : (isKurdish ? 'داخستن' : 'Close'),
                 ),
 
                 // Title / Reference
@@ -163,7 +164,7 @@ class _FocusedReadingSheetState extends State<FocusedReadingSheet> {
                     onPressed: _reset,
                     icon: const Icon(Icons.refresh_rounded, size: 20),
                     color: AppColors.faintText,
-                    tooltip: isKurdish ? 'دوبارەکردنەوە' : 'Reset count',
+                    tooltip: isKurmanji ? 'دوبارەکرن' : (isKurdish ? 'دوبارەکردنەوە' : 'Reset count'),
                   )
                 else
                   const SizedBox(width: 48),
@@ -251,13 +252,17 @@ class _FocusedReadingSheetState extends State<FocusedReadingSheet> {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                isKurdish
+                                isKurmanji
                                     ? (_showTranslation
-                                        ? 'شاردنەوەی مانا'
-                                        : 'پیشاندانی مانا')
-                                    : (_showTranslation
-                                        ? 'Hide meaning'
-                                        : 'Show meaning'),
+                                        ? 'ڤەشارتنا مانایێ'
+                                        : 'نیشاندانا مانایێ')
+                                    : (isKurdish
+                                        ? (_showTranslation
+                                            ? 'شاردنەوەی مانا'
+                                            : 'پیشاندانی مانا')
+                                        : (_showTranslation
+                                            ? 'Hide meaning'
+                                            : 'Show meaning')),
                                 style: TextStyle(
                                   color: AppColors.mutedText,
                                   fontSize: 11,
@@ -361,9 +366,11 @@ class _FocusedReadingSheetState extends State<FocusedReadingSheet> {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          isKurdish
-                              ? (_count > 0 ? 'خوێندراوە: $_count' : 'بۆ ژماردن دەست لێبدە')
-                              : (_count > 0 ? 'Recited: $_count' : 'Tap to Count'),
+                          isKurmanji
+                              ? (_count > 0 ? 'هاتیە خاندن: $_count' : 'بۆ ژمارتنێ دەست لێبدە')
+                              : (isKurdish
+                                  ? (_count > 0 ? 'خوێندراوە: $_count' : 'بۆ ژماردن دەست لێبدە')
+                                  : (_count > 0 ? 'Recited: $_count' : 'Tap to Count')),
                           style: TextStyle(
                             color: _count > 0
                                 ? const Color(0xFFF0FDFA)

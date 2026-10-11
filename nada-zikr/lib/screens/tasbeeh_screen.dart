@@ -160,7 +160,8 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
   Future<void> _chooseCustomTarget() async {
     _customTargetController.text = _target.toString();
     final lang = AppLocalizations.of(context)?.locale.languageCode ?? 'ku';
-    final isKurdish = lang == 'ku';
+    final isKurmanji = lang == 'kmr';
+    final isKurdish = lang == 'ku' || lang == 'kmr';
     final isArabic = lang == 'ar';
 
     final selected = await showDialog<int>(
@@ -171,9 +172,11 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
           child: AlertDialog(
             backgroundColor: AppColors.panelColor,
             title: Text(
-              isKurdish
-                  ? 'دیاریکردنی ژمارەی ئامانج'
-                  : (isArabic ? 'تحديد الهدف' : 'Set Target'),
+              isKurmanji
+                  ? 'دیاریکردنا هژمارا ئارمانجێ'
+                  : (isKurdish
+                      ? 'دیاریکردنی ژمارەی ئامانج'
+                      : (isArabic ? 'تحديد الهدف' : 'Set Target')),
               style: isKurdish
                   ? AppTheme.kurdishTitle(color: AppColors.gold, fontSize: 18)
                   : AppTheme.englishTitle(color: AppColors.gold, fontSize: 18),
@@ -203,9 +206,11 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
-                  isKurdish
-                      ? 'پاشگەزبوونەوە'
-                      : (isArabic ? 'إلغاء' : 'Cancel'),
+                  isKurmanji
+                      ? 'پاشگەزبوون'
+                      : (isKurdish
+                          ? 'پاشگەزبوونەوە'
+                          : (isArabic ? 'إلغاء' : 'Cancel')),
                   style: TextStyle(color: AppColors.mutedText),
                 ),
               ),
@@ -218,9 +223,11 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                   }
                 },
                 child: Text(
-                  isKurdish
-                      ? 'پەسەندکردن'
-                      : (isArabic ? 'تأكيد' : 'OK'),
+                  isKurmanji
+                      ? 'پەسەندکرن'
+                      : (isKurdish
+                          ? 'پەسەندکردن'
+                          : (isArabic ? 'تأكيد' : 'OK')),
                   style: TextStyle(
                       color: AppColors.gold, fontWeight: FontWeight.bold),
                 ),
@@ -243,16 +250,19 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context);
-    final isKurdish = loc?.locale.languageCode == 'ku';
-    final isArabic = loc?.locale.languageCode == 'ar';
+    final lang = AppLocalizations.of(context)?.locale.languageCode ?? 'ku';
+    final isKurmanji = lang == 'kmr';
+    final isKurdish = lang == 'ku' || lang == 'kmr';
+    final isArabic = lang == 'ar';
     final customTargetLabel = _isCustomTarget
         ? '$_target ×'
         : isArabic
             ? 'مخصص · أدخل'
-            : isKurdish
-                ? 'تایبەت · بنووسە'
-                : 'Custom · Enter';
+            : isKurmanji
+                ? 'تایبەت · بنڤیسە'
+                : isKurdish
+                    ? 'تایبەت · بنووسە'
+                    : 'Custom · Enter';
 
     return Scaffold(
       backgroundColor: AppColors.darkBg,
@@ -284,9 +294,6 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // NOTE: Renamed UI title from "Electronic Tasbih" / "Digital Tasbih" / "تەسبیحی ئەلیکترۆنی" / "المسبحة الإلكترونية"
-                            // to simply "Tasbih" / "تەسبیح" / "تسبيح" (UI only). Backend identifiers and storage keys (e.g. 'tasbeeh', 'tasbih_progress')
-                            // are intentionally preserved so existing user data, history, and state remain intact.
                             Text(
                               isKurdish
                                   ? 'تەسبیح'
@@ -304,11 +311,13 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              isKurdish
-                                  ? 'بۆ ژماردن لە هەر شوێنێكی شاشەکە کلیک بکە'
-                                  : (isArabic
-                                      ? 'اضغط في أي مكان على الشاشة للتسبيح'
-                                      : 'Tap anywhere on the screen to count'),
+                              isKurmanji
+                                  ? 'بۆ ژمارتنێ ل هەر جهەکێ شاشەیێ کلیک بکە'
+                                  : (isKurdish
+                                      ? 'بۆ ژماردن لە هەر شوێنێكی شاشەکە کلیک بکە'
+                                      : (isArabic
+                                          ? 'اضغط في أي مكان على الشاشة للتسبيح'
+                                          : 'Tap anywhere on the screen to count')),
                               style: isKurdish
                                   ? AppTheme.kurdishText(
                                       fontSize: 12, color: AppColors.faintText)
@@ -337,7 +346,9 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                             color: AppColors.gold,
                             size: 28,
                           ),
-                          tooltip: isKurdish ? 'ڕیستکردن' : 'Reset',
+                          tooltip: isKurmanji
+                              ? 'دوبارەکرن'
+                              : (isKurdish ? 'ڕیستکردن' : 'Reset'),
                         ),
                       ),
                     ],
@@ -355,9 +366,11 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          isKurdish
-                              ? 'زیکری ئێستا'
-                              : (isArabic ? 'الذكر الحالي' : 'Current zikr'),
+                          isKurmanji
+                              ? 'زکرێ نوکە'
+                              : (isKurdish
+                                  ? 'زیکری ئێستا'
+                                  : (isArabic ? 'الذكر الحالي' : 'Current zikr')),
                           style: isKurdish
                               ? AppTheme.kurdishText(
                                   fontSize: 11, color: AppColors.faintText)
@@ -399,11 +412,13 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                       _restoreProgress(trimmed, isCustom: true);
                     },
                     decoration: InputDecoration(
-                      hintText: isKurdish
-                          ? 'زیکری خۆت بنووسە'
-                          : (isArabic
-                              ? 'اكتب ذكرك الخاص'
-                              : 'Write your own zikr'),
+                      hintText: isKurmanji
+                          ? 'زکرێ خۆ بنڤیسە'
+                          : (isKurdish
+                              ? 'زیکری خۆت بنووسە'
+                              : (isArabic
+                                  ? 'اكتب ذكرك الخاص'
+                                  : 'Write your own zikr')),
                       hintStyle: isKurdish
                           ? AppTheme.kurdishText(
                               color: AppColors.veryFaintText, fontSize: 13)
@@ -516,9 +531,11 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              isKurdish
-                                  ? 'ژماردن'
-                                  : (isArabic ? 'اضغط للتسبيح' : 'Tap to count'),
+                              isKurmanji
+                                  ? 'ژمارتن'
+                                  : (isKurdish
+                                      ? 'ژماردن'
+                                      : (isArabic ? 'اضغط للتسبيح' : 'Tap to count')),
                               style: isKurdish
                                   ? AppTheme.kurdishText(
                                       color: AppColors.veryFaintText,
@@ -572,9 +589,11 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                           child: _statCard(
-                              isKurdish
-                                  ? 'ئامانج'
-                                  : (isArabic ? 'الهدف' : 'Target'),
+                              isKurmanji
+                                  ? 'ئارمانج'
+                                  : (isKurdish
+                                      ? 'ئامانج'
+                                      : (isArabic ? 'الهدف' : 'Target')),
                               '$_target',
                               highlight: true,
                               isArabic: isArabic,
@@ -582,9 +601,11 @@ class _TasbeehScreenState extends State<TasbeehScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                           child: _statCard(
-                              isKurdish
-                                  ? 'کۆی گشتی'
-                                  : (isArabic ? 'المجموع' : 'Total'),
+                              isKurmanji
+                                  ? 'کۆیا گشتی'
+                                  : (isKurdish
+                                      ? 'کۆی گشتی'
+                                      : (isArabic ? 'المجموع' : 'Total')),
                               '$_count',
                               isArabic: isArabic,
                               isKurdish: isKurdish)),

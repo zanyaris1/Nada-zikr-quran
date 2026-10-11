@@ -159,44 +159,56 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
     final bool isExactAlarmMissing = !_exactAlarmsAllowed;
 
     final String title = isNotificationMissing
-        ? (isKurdish
-            ? 'ئاگادارکردنەوەکان ناچالاکن'
-            : (lang == 'ar' ? 'الإشعارات معطلة' : 'Notifications are disabled'))
-        : (isExactAlarmMissing
-            ? (isKurdish
-                ? 'کات دیاریکردنی ورد سنووردارە'
-                : (lang == 'ar'
-                    ? 'تنبيهات المواعيد الدقيقة مقيدة'
-                    : 'Exact prayer alarms restricted'))
+        ? (lang == 'kmr'
+            ? 'ئاگەهدارکرن نەچالاكن'
             : (isKurdish
-                ? 'دەستکاریکەری پاتری (پاشبنەما)'
-                : (lang == 'ar'
-                    ? 'تحسين البطارية نشط'
-                    : 'Battery Saver Active')));
+                ? 'ئاگادارکردنەوەکان ناچالاکن'
+                : (lang == 'ar' ? 'الإشعارات معطلة' : 'Notifications are disabled')))
+        : (isExactAlarmMissing
+            ? (lang == 'kmr'
+                ? 'دیاریکردنا دەمێ دروست سنووردارە'
+                : (isKurdish
+                    ? 'کات دیاریکردنی ورد سنووردارە'
+                    : (lang == 'ar'
+                        ? 'تنبيهات المواعيد الدقيقة مقيدة'
+                        : 'Exact prayer alarms restricted')))
+            : (lang == 'kmr'
+                ? 'دەستکاریکەرێ پاتریێ'
+                : (isKurdish
+                    ? 'دەستکاریکەری پاتری (پاشبنەما)'
+                    : (lang == 'ar'
+                        ? 'تحسين البطارية نشط'
+                        : 'Battery Saver Active'))));
 
     final String subtitle = isNotificationMissing
-        ? (isKurdish
-            ? 'تکایە ڕێگە بە ئاگادارکردنەوە بدە بۆ گەیشتنی بانگ و کاتی نوێژەکان.'
-            : (lang == 'ar'
-                ? 'يرجى تفعيل الإشعارات لسماع الأذان وتنبيهات أوقات الصلاة.'
-                : 'Enable notifications to hear the Azan and prayer alerts on time.'))
-        : (isExactAlarmMissing
-            ? (isKurdish
-                ? 'بۆ ئەوەی بانگ ڕێک لە کاتی خۆیدا لێبدات، ڕێگە بە کاتژمێری ورد بدە لە ڕێکخستنەکان.'
-                : (lang == 'ar'
-                    ? 'لسماع الأذان بدقة في وقته المحدد، يرجى السماح بالتنبيهات الدقيقة.'
-                    : 'To ring the Azan accurately on time, allow Alarms & Reminders in settings.'))
+        ? (lang == 'kmr'
+            ? 'هیڤییە ڕێگێ بدە ئاگەهدارکرنان بۆ گەهشتنا بانگی و دەمێن نڤێژێ.'
             : (isKurdish
-                ? 'بۆ ئەوەی لە کاتی قفڵبووندا مۆبایلەکەت بانگ نەوەستێنێت، بەخشین لە پاتری هەڵبژێرە.'
+                ? 'تکایە ڕێگە بە ئاگادارکردنەوە بدە بۆ گەیشتنی بانگ و کاتی نوێژەکان.'
                 : (lang == 'ar'
-                    ? 'لضمان سماع صوت الأذان عند قفل الشاشة، يرجى استثناء التطبيق من تحسين البطارية.'
-                    : 'To ensure Azan sounds reliably when phone is locked, exclude from battery saver.')));
+                    ? 'يرجى تفعيل الإشعارات لسماع الأذان وتنبيهات أوقات الصلاة.'
+                    : 'Enable notifications to hear the Azan and prayer alerts on time.')))
+        : (isExactAlarmMissing
+            ? (lang == 'kmr'
+                ? 'داکو بانگ ڕێک ل دەمێ خۆ لێبدەت، ڕێگێ بدە دەمژمێرا هویر د ڕێکخستنان دا.'
+                : (isKurdish
+                    ? 'بۆ ئەوەی بانگ ڕێک لە کاتی خۆیدا لێبدات، ڕێگە بە کاتژمێری ورد بدە لە ڕێکخستنەکان.'
+                    : (lang == 'ar'
+                        ? 'لسماع الأذان بدقة في وقته المحدد، يرجى السماح بالتنبيهات الدقيقة.'
+                        : 'To ring the Azan accurately on time, allow Alarms & Reminders in settings.')))
+            : (lang == 'kmr'
+                ? 'داکو ل دەمێ قفلبوونێ مۆبایلا تە بانگی نەڕاوەستینیت، پاتریێ ڕێکبێخە.'
+                : (isKurdish
+                    ? 'بۆ ئەوەی لە کاتی قفڵبووندا مۆبایلەکەت بانگ نەوەستێنێت، بەخشین لە پاتری هەڵبژێرە.'
+                    : (lang == 'ar'
+                        ? 'لضمان سماع صوت الأذان عند قفل الشاشة، يرجى استثناء التطبيق من تحسين البطارية.'
+                        : 'To ensure Azan sounds reliably when phone is locked, exclude from battery saver.'))));
 
     final String buttonLabel = isNotificationMissing
-        ? (isKurdish ? 'چالاککردن' : (lang == 'ar' ? 'تفعيل' : 'Enable'))
+        ? (lang == 'kmr' ? 'چالاککرن' : (isKurdish ? 'چالاککردن' : (lang == 'ar' ? 'تفعيل' : 'Enable')))
         : (isExactAlarmMissing
-            ? (isKurdish ? 'ڕێکخستن' : (lang == 'ar' ? 'إصلاح' : 'Fix'))
-            : (isKurdish ? 'ڕێپێدان' : (lang == 'ar' ? 'سماح' : 'Allow')));
+            ? (lang == 'kmr' ? 'ڕێکخستن' : (isKurdish ? 'ڕێکخستن' : (lang == 'ar' ? 'إصلاح' : 'Fix')))
+            : (lang == 'kmr' ? 'ڕێپێدان' : (isKurdish ? 'ڕێپێدان' : (lang == 'ar' ? 'سماح' : 'Allow'))));
 
     final IconData bannerIcon = isNotificationMissing
         ? Icons.notifications_off_rounded
@@ -299,7 +311,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
     final lang = loc?.locale.languageCode ?? 'ku';
-    final isKurdish = lang == 'ku';
+    final isKurdish = lang == 'ku' || lang == 'kmr';
 
     return Scaffold(
       backgroundColor: AppColors.darkBg,
@@ -569,11 +581,13 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Text(
-                                        isKurdish
-                                            ? 'نوێژی داهاتوو'
-                                            : (lang == 'ar'
-                                                ? 'الصلاة القادمة'
-                                                : 'NEXT PRAYER'),
+                                        lang == 'kmr'
+                                            ? 'نڤێژا بهێت'
+                                            : (isKurdish
+                                                ? 'نوێژی داهاتوو'
+                                                : (lang == 'ar'
+                                                    ? 'الصلاة القادمة'
+                                                    : 'NEXT PRAYER')),
                                         style: AppTheme.englishText(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
@@ -822,6 +836,10 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
       'دووشەممە', 'سێشەممە', 'چوارشەممە', 'پێنجشەممە',
       'هەینی', 'شەممە', 'یەکشەممە',
     ];
+    const kmrDays = [
+      'دووشەمب', 'سێشەمب', 'چوارشەمب', 'پێنجشەمب',
+      'ئەینی', 'شەمبی', 'ئێکشەمب',
+    ];
     const arDays = [
       'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس',
       'الجمعة', 'السبت', 'الأحد',
@@ -831,6 +849,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
       'Friday', 'Saturday', 'Sunday',
     ];
     final index = weekday - 1; // DateTime.weekday: 1=Mon, 7=Sun
+    if (lang == 'kmr') return kmrDays[index];
     if (lang == 'ku') return kuDays[index];
     if (lang == 'ar') return arDays[index];
     return enDays[index];

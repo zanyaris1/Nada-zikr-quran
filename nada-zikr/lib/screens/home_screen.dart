@@ -92,14 +92,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (hasCompletedAllFour) {
         final loc = AppLocalizations.of(context);
-        final isKurdish = (loc?.locale.languageCode ?? 'ku') == 'ku';
-        _checkAndShowDailyPathCongrats(isKurdish);
+        final lang = loc?.locale.languageCode ?? 'ku';
+        _checkAndShowDailyPathCongrats(lang);
       }
     }
   }
 
 
-  void _checkAndShowDailyPathCongrats(bool isKurdish) async {
+  void _checkAndShowDailyPathCongrats(String lang) async {
     final completion = StorageService.getDailyPathCompletion();
     final hasCompletedAllFour = completion['morning'] == true &&
         completion['tasbeeh'] == true &&
@@ -115,6 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
     await StorageService.saveSetting(todayKey, true);
 
     if (!mounted) return;
+    final isKurmanji = lang == 'kmr';
+    final isKurdish = lang == 'ku' || lang == 'kmr';
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -145,7 +148,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  isKurdish ? 'پیرۆزباییت لێ دەکەین!' : 'Congratulations!',
+                  isKurmanji
+                      ? 'پیرۆزباهیێ ل تە دکەین!'
+                      : (isKurdish ? 'پیرۆزباییت لێ دەکەین!' : 'Congratulations!'),
                   textAlign: TextAlign.center,
                   style: isKurdish
                       ? AppTheme.kurdishTitle(fontSize: 22, color: AppColors.gold)
@@ -153,9 +158,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  isKurdish
-                      ? 'تەواوی 4 بەشی ڕێڕەوی ڕۆژانەی زیکرەکانت بۆ ئەمڕۆ بە سەرکەوتوویی تەواو کرد. خوای میهرەبان بەڵێنی پاداشتی زۆرترت پێ دەدات.'
-                      : 'You have successfully completed all 4 steps of your Daily Path today. May Allah reward you greatly!',
+                  isKurmanji
+                      ? 'تە هەر ٤ پشکێن ڕێڕەوا ڕۆژانە یا زکران بۆ ئەڤرۆ ب سەرکەفتیانە ب دووماهی ئینا. خودایێ مەزن مژارا خێر و پاداشتەکێ مەزنتر ددەتە تە.'
+                      : (isKurdish
+                          ? 'تەواوی 4 بەشی ڕێڕەوی ڕۆژانەی زیکرەکانت بۆ ئەمڕۆ بە سەرکەوتوویی تەواو کرد. خوای میهرەبان بەڵێنی پاداشتی زۆرترت پێ دەدات.'
+                          : 'You have successfully completed all 4 steps of your Daily Path today. May Allah reward you greatly!'),
                   textAlign: TextAlign.center,
                   style: isKurdish
                       ? AppTheme.kurdishText(fontSize: 13, color: AppColors.cream)
@@ -177,9 +184,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        isKurdish
-                            ? 'الحمد لله (سوپاس بۆ خوا)'
-                            : 'Alhamdulillah (Praise be to Allah)',
+                        isKurmanji
+                            ? 'الحمد لله (سوپاس بۆ خودێ)'
+                            : (isKurdish
+                                ? 'الحمد لله (سوپاس بۆ خوا)'
+                                : 'Alhamdulillah (Praise be to Allah)'),
                         style: isKurdish
                             ? AppTheme.kurdishTitle(
                                 fontSize: 14, color: Colors.black)
@@ -231,7 +240,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String _getGreeting(String lang) {
     final hour = DateTime.now().hour;
-    if (lang == 'ku') {
+    if (lang == 'kmr') {
+      if (hour >= 4 && hour < 12) return 'سپێدە باش';
+      if (hour >= 12 && hour < 17) return 'ڕۆژ باش';
+      if (hour >= 17 && hour < 21) return 'ئێڤار باش';
+      return 'شەڤ باش';
+    } else if (lang == 'ku') {
       if (hour >= 4 && hour < 12) return 'بەیانیت باش';
       if (hour >= 12 && hour < 17) return 'ڕۆژت باش';
       if (hour >= 17 && hour < 21) return 'ئێوارەت باش';
@@ -253,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
     final lang = loc?.locale.languageCode ?? 'ku';
-    final isKurdish = lang == 'ku';
+    final isKurdish = lang == 'ku' || lang == 'kmr';
     final isArabic = lang == 'ar';
 
     if (_profile == null) {
@@ -837,19 +851,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             children: [
                               _buildQuickCard(
-                                label: isKurdish
-                                    ? 'ناوی خوای گەورە'
-                                    : (lang == 'ar'
-                                        ? 'أسماء الله الحسنى'
-                                        : '99 Names'),
-                                subtitle: isKurdish
+                                label: lang == 'kmr'
+                                    ? 'ناڤێن خودایێ مەزن'
+                                    : (isKurdish
+                                        ? 'ناوی خوای گەورە'
+                                        : (lang == 'ar'
+                                            ? 'أسماء الله الحسنى'
+                                            : '99 Names')),
+                                subtitle: lang == 'kmr'
                                     ? 'ئەسماول حوسنا'
-                                    : (lang == 'ar'
-                                        ? 'معاني وفضائل'
-                                        : 'Asmaul Husna'),
-                                badgeText: isKurdish
-                                    ? '99 ناو'
-                                    : (lang == 'ar' ? '99 اسم' : '99 Names'),
+                                    : (isKurdish
+                                        ? 'ئەسماول حوسنا'
+                                        : (lang == 'ar'
+                                            ? 'معاني وفضائل'
+                                            : 'Asmaul Husna')),
+                                badgeText: lang == 'kmr'
+                                    ? '99 ناڤ'
+                                    : (isKurdish
+                                        ? '99 ناو'
+                                        : (lang == 'ar' ? '99 اسم' : '99 Names')),
                                 icon: Icons.stars_rounded,
                                 accentColor: AppColors.gold,
                                 isKurdish: isKurdish,
@@ -863,19 +883,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                               ),
                               _buildQuickCard(
-                                label: isKurdish
-                                    ? 'زیکر و دوعاکان'
-                                    : (lang == 'ar'
-                                        ? 'الأذكار والأدعية'
-                                        : 'All Zikr & Duas'),
-                                subtitle: isKurdish
-                                    ? 'سەرجەم بەشەکان'
-                                    : (lang == 'ar'
-                                        ? 'جميع الأقسام'
-                                        : 'All Categories'),
-                                badgeText: isKurdish
-                                    ? 'هەموو'
-                                    : (lang == 'ar' ? 'الكل' : 'All'),
+                                label: lang == 'kmr'
+                                    ? 'زکر و دوعا'
+                                    : (isKurdish
+                                        ? 'زیکر و دوعاکان'
+                                        : (lang == 'ar'
+                                            ? 'الأذكار والأدعية'
+                                            : 'All Zikr & Duas')),
+                                subtitle: lang == 'kmr'
+                                    ? 'هەمی پشک'
+                                    : (isKurdish
+                                        ? 'سەرجەم بەشەکان'
+                                        : (lang == 'ar'
+                                            ? 'جميع الأقسام'
+                                            : 'All Categories')),
+                                badgeText: lang == 'kmr'
+                                    ? 'هەمی'
+                                    : (isKurdish
+                                        ? 'هەموو'
+                                        : (lang == 'ar' ? 'الكل' : 'All')),
                                 icon: Icons.auto_stories_rounded,
                                 accentColor: const Color(0xFF10B981),
                                 isKurdish: isKurdish,
@@ -889,19 +915,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                               ),
                               _buildQuickCard(
-                                label: isKurdish
-                                    ? 'ڕووگەی قیبلە'
-                                    : (lang == 'ar'
-                                        ? 'اتجاه القبلة'
-                                        : 'Qibla Compass'),
-                                subtitle: isKurdish
-                                    ? 'دۆزینەوەی قیبلە'
-                                    : (lang == 'ar'
-                                        ? 'تحديد دقيق'
-                                        : 'Find Qibla'),
-                                badgeText: isKurdish
+                                label: lang == 'kmr'
+                                    ? 'قیبلەنما'
+                                    : (isKurdish
+                                        ? 'ڕووگەی قیبلە'
+                                        : (lang == 'ar'
+                                            ? 'اتجاه القبلة'
+                                            : 'Qibla Compass')),
+                                subtitle: lang == 'kmr'
+                                    ? 'دیاریکردنا قیبلێ'
+                                    : (isKurdish
+                                        ? 'دۆزینەوەی قیبلە'
+                                        : (lang == 'ar'
+                                            ? 'تحديد دقيق'
+                                            : 'Find Qibla')),
+                                badgeText: lang == 'kmr'
                                     ? 'قیبلە'
-                                    : (lang == 'ar' ? 'مباشر' : 'Live'),
+                                    : (isKurdish
+                                        ? 'قیبلە'
+                                        : (lang == 'ar' ? 'مباشر' : 'Live')),
                                 icon: Icons.explore_rounded,
                                 accentColor: const Color(0xFF0EA5E9),
                                 isKurdish: isKurdish,
@@ -937,19 +969,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                               ),
                               _buildQuickCard(
-                                label: isKurdish
+                                label: lang == 'kmr'
                                     ? 'ئامار و بەردەوامی'
-                                    : (lang == 'ar'
-                                        ? 'الإحصائيات والإنجاز'
-                                        : 'Streaks & Stats'),
-                                subtitle: isKurdish
-                                    ? 'پێشکەوتنی تۆ'
-                                    : (lang == 'ar'
-                                        ? 'متابعة يومية'
-                                        : 'Your progress'),
-                                badgeText: isKurdish
+                                    : (isKurdish
+                                        ? 'ئامار و بەردەوامی'
+                                        : (lang == 'ar'
+                                            ? 'الإحصائيات والإنجاز'
+                                            : 'Streaks & Stats')),
+                                subtitle: lang == 'kmr'
+                                    ? 'پێشکەفتنا تە'
+                                    : (isKurdish
+                                        ? 'پێشکەوتنی تۆ'
+                                        : (lang == 'ar'
+                                            ? 'متابعة يومية'
+                                            : 'Your progress')),
+                                badgeText: lang == 'kmr'
                                     ? 'ئامار'
-                                    : (lang == 'ar' ? 'تقدم' : 'Stats'),
+                                    : (isKurdish
+                                        ? 'ئامار'
+                                        : (lang == 'ar' ? 'تقدم' : 'Stats')),
                                 icon: Icons.local_fire_department_rounded,
                                 accentColor: AppColors.fireOrange,
                                 isKurdish: isKurdish,
@@ -1187,9 +1225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 final cat = AppData.azkarCategories[index];
                 final catColor =
                     Color(int.parse(cat.color.replaceFirst('#', '0xFF')));
-                final title = isKurdish
-                    ? cat.kurdish
-                    : (lang == 'en' ? cat.english : cat.label);
+                final title = cat.getTitle(lang);
                 final thumb = _getCategoryThumbnail(cat.id);
 
                 return Padding(
@@ -1439,7 +1475,7 @@ class _MoodCardSheetContentState extends State<_MoodCardSheetContent> {
   Widget build(BuildContext context) {
     final tone = widget.tone;
     final locale = widget.locale;
-    final isKurdish = locale == 'ku';
+    final isKurdish = locale == 'ku' || locale == 'kmr';
 
     return DraggableScrollableSheet(
       initialChildSize: 0.82,
@@ -1662,21 +1698,29 @@ class _MoodVerseCardState extends State<_MoodVerseCard> {
     if (!mounted) return;
     setState(() => _isSaved = saved);
 
+    final isKurmanji = widget.locale == 'kmr';
     final isK = widget.locale == 'ku';
+    final isKurdish = isKurmanji || isK;
     final isAr = widget.locale == 'ar';
     final message = saved
-        ? (isK
-            ? 'ئایەتەکە پاشەکەوت کرا بۆ دڵخوازەکان'
-            : isAr
-                ? 'تم حفظ الآية في المحفوظات'
-                : 'Ayah saved to favorites!')
-        : (isK
-            ? 'ئایەتەکە لاپرا لە دڵخوازەکان'
-            : isAr
-                ? 'تمت إزالة الآية من المحفوظات'
-                : 'Ayah removed from saved cards');
+        ? (isKurmanji
+            ? 'ئایەت هاتە پاراستن د دڵخوازاندا'
+            : isK
+                ? 'ئایەتەکە پاشەکەوت کرا بۆ دڵخوازەکان'
+                : isAr
+                    ? 'تم حفظ الآية في المحفوظات'
+                    : 'Ayah saved to favorites!')
+        : (isKurmanji
+            ? 'ئایەت ژ دڵخوازان هاتە لادان'
+            : isK
+                ? 'ئایەتەکە لاپرا لە دڵخوازەکان'
+                : isAr
+                    ? 'تمت إزالة الآية من المحفوظات'
+                    : 'Ayah removed from saved cards');
 
-    final undoLabel = isK ? 'گەڕاندنەوە' : (isAr ? 'تراجع' : 'Undo');
+    final undoLabel = isKurmanji
+        ? 'ڤەگەڕاندن'
+        : (isK ? 'گەڕاندنەوە' : (isAr ? 'تراجع' : 'Undo'));
 
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -1697,7 +1741,7 @@ class _MoodVerseCardState extends State<_MoodVerseCard> {
             Expanded(
               child: Text(
                 message,
-                style: isK
+                style: isKurdish
                     ? AppTheme.kurdishText(color: AppColors.cream, fontSize: 13)
                     : AppTheme.englishText(
                         color: AppColors.cream, fontSize: 13),
@@ -1722,7 +1766,8 @@ class _MoodVerseCardState extends State<_MoodVerseCard> {
 
   @override
   Widget build(BuildContext context) {
-    final isKurdish = widget.locale == 'ku';
+    final isKurmanji = widget.locale == 'kmr';
+    final isKurdish = widget.locale == 'ku' || isKurmanji;
     final isRtl = isKurdish || widget.locale == 'ar';
 
     return Container(
@@ -1751,7 +1796,7 @@ class _MoodVerseCardState extends State<_MoodVerseCard> {
                   onTap: () =>
                       widget.onOpenAyah(widget.verse.surah, widget.verse.ayah),
                   child: Text(
-                    '${AppLocalizations.of(context)?.translate('surah') ?? 'سورەت'} ${widget.verse.surah}:${widget.verse.ayah}',
+                    '${AppLocalizations.of(context)?.translate('surah') ?? (isKurmanji ? 'سورەتا' : 'سورەت')} ${widget.verse.surah}:${widget.verse.ayah}',
                     textDirection:
                         isRtl ? TextDirection.rtl : TextDirection.ltr,
                     style: (isRtl
@@ -1770,14 +1815,16 @@ class _MoodVerseCardState extends State<_MoodVerseCard> {
                 ),
               ),
               IconButton(
-                tooltip: isKurdish
-                    ? 'هاوبەشکردن'
-                    : (widget.locale == 'ar' ? 'مشاركة' : 'Share'),
+                tooltip: isKurmanji
+                    ? 'بەلاڤکرن'
+                    : (isKurdish
+                        ? 'هاوبەشکردن'
+                        : (widget.locale == 'ar' ? 'مشاركة' : 'Share')),
                 onPressed: () {
                   final loc = AppLocalizations.of(context);
                   final surahText =
-                      '${loc?.translate('surah') ?? 'سورەت'} ${widget.verse.surah}:${widget.verse.ayah}';
-                  final meaning = widget.locale == 'ku'
+                      '${loc?.translate('surah') ?? (isKurmanji ? 'سورەتا' : 'سورەت')} ${widget.verse.surah}:${widget.verse.ayah}';
+                  final meaning = (widget.locale == 'ku' || widget.locale == 'kmr')
                       ? (widget.verse.kurdishMeaning ??
                           widget.verse.englishMeaning)
                       : widget.verse.englishMeaning;
@@ -1790,16 +1837,20 @@ class _MoodVerseCardState extends State<_MoodVerseCard> {
               ),
               IconButton(
                 tooltip: _isSaved
-                    ? (isKurdish
-                        ? 'ئایەتەکە لە هەڵگیراوەکان دەربهێنە'
-                        : (widget.locale == 'ar'
-                            ? 'إزالة الآية من المحفوظات'
-                            : 'Unsave ayah'))
-                    : (isKurdish
-                        ? 'ئایەتەکە پاشەکەوت بکە'
-                        : (widget.locale == 'ar'
-                            ? 'حفظ الآية'
-                            : 'Save ayah')),
+                    ? (isKurmanji
+                        ? 'ئایەتێ ژ پاراستیان دەربینە'
+                        : (isKurdish
+                            ? 'ئایەتەکە لە هەڵگیراوەکان دەربهێنە'
+                            : (widget.locale == 'ar'
+                                ? 'إزالة الآية من المحفوظات'
+                                : 'Unsave ayah')))
+                    : (isKurmanji
+                        ? 'ئایەتێ بپارێزە'
+                        : (isKurdish
+                            ? 'ئایەتەکە پاشەکەوت بکە'
+                            : (widget.locale == 'ar'
+                                ? 'حفظ الآية'
+                                : 'Save ayah'))),
                 onPressed: _isLoading ? null : _toggleSaved,
                 icon: Icon(_isSaved
                     ? Icons.bookmark_rounded
@@ -1822,7 +1873,7 @@ class _MoodVerseCardState extends State<_MoodVerseCard> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  widget.locale == 'ku'
+                  (widget.locale == 'ku' || widget.locale == 'kmr')
                       ? (widget.verse.kurdishMeaning ??
                           widget.verse.englishMeaning)
                       : widget.verse.englishMeaning,

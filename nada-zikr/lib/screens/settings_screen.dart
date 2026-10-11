@@ -257,7 +257,7 @@ class _SettingsScreenState extends State<SettingsScreen>
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
-    final isKurdish = _currentLang == 'ku';
+    final isKurdish = _currentLang == 'ku' || _currentLang == 'kmr';
     final currentPalette = AppThemeController.instance.palette;
 
     return Scaffold(
@@ -949,6 +949,8 @@ class _SettingsScreenState extends State<SettingsScreen>
     switch (code) {
       case 'ku':
         return 'کوردی (سۆرانی) · Kurdish';
+      case 'kmr':
+        return 'کورمانجی (بادینی) · Kurmanji';
       case 'ar':
         return 'العربية · Arabic';
       case 'en':
@@ -965,7 +967,14 @@ class _SettingsScreenState extends State<SettingsScreen>
         'title': 'کوردی (سۆرانی)',
         'subtitle': 'Kurdish (Sorani)',
         'icon': Icons.brightness_5_rounded,
-        'badge': 'سەرەکی',
+        'badge': 'سۆرانی',
+      },
+      {
+        'code': 'kmr',
+        'title': 'کورمانجی (بادینی)',
+        'subtitle': 'Kurdish (Kurmanji / Badini)',
+        'icon': Icons.explore_rounded,
+        'badge': 'بادینی',
       },
       {
         'code': 'ar',
